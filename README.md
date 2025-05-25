@@ -44,7 +44,7 @@ Note 中，便于团队查看和处理。
 
 - 克隆项目仓库：
 ```aiignore
-git clone https://github.com/sunmh207/AI-Codereview-Gitlab.git
+git clone https://github.com/jiangwen0259/AI-Codereview-Gitlab.git
 cd AI-Codereview-Gitlab
 ```
 
@@ -93,7 +93,7 @@ docker-compose up -d
 **1. 获取源码**
 
 ```bash
-git clone https://github.com/sunmh207/AI-Codereview-Gitlab.git
+git clone https://github.com/jiangwen0259/AI-Codereview-Gitlab.git
 cd AI-Codereview-Gitlab
 ```
 
