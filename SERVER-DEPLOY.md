@@ -21,6 +21,8 @@ exec /usr/bin/supervisord: exec format error
 - Docker
 - docker-compose
 - curl (用于健康检查)
+- 服务器可以访问外网（用于拉取镜像和访问AI服务）
+- GitLab 可以访问到服务器（用于webhook回调）
 
 ### 2. 获取项目代码
 
@@ -29,36 +31,61 @@ git clone https://github.com/jiangwen0259/AI-Codereview-Gitlab.git
 cd AI-Codereview-Gitlab
 ```
 
-### 3. 运行部署脚本
+### 3. 配置环境变量
 
+复制配置模板：
 ```bash
-chmod +x deploy-server.sh
-./deploy-server.sh
+cp conf/env.server-template conf/.env
 ```
 
-### 4. 配置环境变量
-
-首次运行脚本时，会自动创建配置文件 `conf/.env`。请编辑此文件：
+编辑 `conf/.env` 文件，配置以下**必需**参数：
 
 ```bash
-vi conf/.env
+# 大模型配置
+LLM_PROVIDER=deepseek
+DEEPSEEK_API_KEY=sk-your-actual-deepseek-api-key
+
+# GitLab配置 (必需 - 缺少会导致webhook失败)
+GITLAB_URL=https://your-gitlab-instance.com
+GITLAB_ACCESS_TOKEN=glpat-your-actual-gitlab-token
+
+# 支持的文件类型
+SUPPORTED_EXTENSIONS=.java,.py,.php,.yml,.vue,.go,.c,.cpp,.h,.js,.css,.md,.sql
 ```
 
-**必填配置项：**
-- `DEEPSEEK_API_KEY`: DeepSeek API密钥
-- `GITLAB_ACCESS_TOKEN`: GitLab访问令牌
+**重要说明：**
+- `GITLAB_URL`: GitLab实例的完整URL（如：https://gitlab.com 或 https://your-gitlab.company.com）
+- `GITLAB_ACCESS_TOKEN`: GitLab访问令牌，需要有项目读取权限
+- 如果缺少 `GITLAB_URL` 配置，webhook调用会返回 "Missing GitLab URL" 错误
 
-**可选配置项：**
-- `DINGTALK_WEBHOOK_URL`: 钉钉机器人Webhook地址
-- `REVIEW_STYLE`: 审查风格 (professional/sarcastic/gentle/humorous)
-
-### 5. 重新启动服务
-
-配置完成后，重新运行部署脚本：
+### 4. 启动服务
 
 ```bash
-./deploy-server.sh
+docker-compose up -d
 ```
+
+### 5. 验证部署
+
+检查服务状态：
+```bash
+docker-compose ps
+```
+
+测试API服务：
+```bash
+curl http://localhost:5001
+# 应该返回: "The code review server is running."
+```
+
+访问Dashboard：
+- 打开浏览器访问 `http://your-server-ip:5002`
+
+### 6. 配置GitLab Webhook
+
+在GitLab项目设置中添加Webhook：
+- URL: `http://your-server-ip:5001/review/webhook`
+- Trigger Events: 勾选 `Push Events` 和 `Merge Request Events`
+- Secret Token: 使用上面配置的 `GITLAB_ACCESS_TOKEN`（可选）
 
 ## 服务管理
 
