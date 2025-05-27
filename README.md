@@ -36,6 +36,21 @@ Note 中，便于团队查看和处理。
 
 ![流程图](./doc/img/process.png)
 
+## 🚀 系统架构与未来规划
+
+### 当前架构
+系统采用事件驱动架构，支持GitLab webhook触发的自动化代码审查流程。
+
+### 未来发展蓝图
+我们正在规划一个更加智能化和全面的代码质量保障系统：
+
+- **🔧 Phase 1 (3-6个月)**: 代码质量增强 - 集成静态分析、代码标准检查、质量评分
+- **📋 Phase 2 (6-9个月)**: 需求设计对齐 - 产品需求文档解析、设计文档验证、一致性检查  
+- **🛡️ Phase 3 (9-12个月)**: 深度技术分析 - 架构合规、安全扫描、性能分析、业务逻辑验证
+- **🤖 Phase 4 (12-18个月)**: 智能化辅助 - 自动修复建议、重构指导、学习推荐
+
+详细的系统架构和发展规划请参考：[AI代码审查增强流程图](./doc/AI-CodeReview-Enhanced-Workflow.md)
+
 ## 部署
 
 ### 方案一：Docker 部署
@@ -136,6 +151,7 @@ streamlit run ui.py --server.port=5002 --server.address=0.0.0.0
 在 GitLab 项目设置中，配置 Webhook：
 
 - URL：http://your-server-ip:5001/review/webhook
+- http://10.0.19.40:5001/review/webhook
 - Trigger Events：勾选 Push Events 和 Merge Request Events (不要勾选其它Event)
 - Secret Token：上面配置的 Access Token(可选)
 
